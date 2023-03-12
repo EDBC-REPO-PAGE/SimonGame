@@ -1,0 +1,91 @@
+<main>
+
+    <section class="uk-padding-large uk-position-center">
+        <ul class="uk-list uk-flex uk-flex-wrap uk-child-width-1-2">
+        /°(()=>{
+            const result = new Array(4); result.fill(0);
+            return result.map((x,i)=>`
+                <li class="uk-padding-small uk-child-width-1-1 uk-margin-remove">
+                    <a button="${i}" class="uk-button uk-height-small"> </a>
+                </li>
+            `).join('');
+        })()°/
+        </ul>
+    </section>
+
+    <section class="uk-padding-large uk-position-bottom uk-position-small uk-flex uk-flex-center">
+        <div class="uk-pading uk-rounded uk-darker uk-width-1-3 uk-flex uk-flex-center">
+
+            <div class="uk-padding uk-align-self-center">
+                <a class="uk-text-default" points> 00 </a>
+            </div>
+
+            <div class="uk-padding">
+                <a class="uk-button uk-warning uk-enphasis
+                          uk-default-enphasis-hover uk-rounded"
+                    onclick="window.simonPlay()"
+                    uk-icon="icon:play">
+                </a>
+            </div>
+
+            <div class="uk-padding">
+                <a class="uk-button uk-warning uk-enphasis
+                          uk-default-enphasis-hover uk-rounded"
+                    onclick="window.simonReset()"
+                    uk-icon="icon:refresh">
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<!--──────────────────────────────────────────────────────────────────────────────────────────────-->
+
+<script>
+(function(){
+
+    function main(){ const color = window.state.get('color');
+        _$(`[button]`).map(x=>x.setAttribute('active','false')); 
+        if( !color ) return 0;
+         $(`[button='${color-1}']`).setAttribute('active','true');
+    }
+
+    window.simonPlay = function(){
+        window.state.set((state)=>({
+            state: state.state=='paused' ? 
+                      'reset' : 'paused'
+        }));
+    }
+
+    window.simonReset = function(){
+        window.state.set({ state: 'reset' });
+    }
+
+    window.state.observeField('c_order',(prev,act)=>{
+        $('[points]').innerText = act.length < 10 ? 
+               `0${act.length}` : act.length;
+    })
+
+    window.state.observeField('color',main);
+    main();
+
+})()
+</script>
+
+<!--──────────────────────────────────────────────────────────────────────────────────────────────-->
+
+<script>
+(function(){
+
+    for( let i=4; i--; ){
+        addEvent( $(`[button='${i}']`), 'click', ()=>{
+            if( window.state.get('state') == 'keyboard' ){
+                window.state.set(state=>({ color: i+1, pos: state.pos+1 }));
+            }
+        })
+    }
+
+})()
+</script>
